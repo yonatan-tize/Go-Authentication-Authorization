@@ -1,7 +1,7 @@
 package main
 
 import (
-	routes "github.com/yonatan-tize/go-auth/routes"
+	"github.com/yonatan-tize/go-auth/routes"
 	"os"
 	"github.com/gin-gonic/gin"
 )
@@ -9,7 +9,6 @@ import (
 func main(){
 
 	port := os.Getenv("PORT")
-
 	if port == ""{
 		port = "8080"
 	}
@@ -20,11 +19,11 @@ func main(){
 	routes.AuthRoutes(router)
 	routes.UserRoutes(router)
 
-	router.GET("api-1",func(c *gin.Context){
+	router.GET("/api-1",func(c *gin.Context){
 		c.JSON(200, gin.H{"success": "Access granted for api-1"})
 	})
 
-	router.GET("api-2",func(c *gin.Context){
+	router.GET("/api-2",func(c *gin.Context){
 		c.JSON(200, gin.H{"success": "Access granted for api-2"})
 	})
 
