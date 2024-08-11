@@ -60,6 +60,7 @@ func SignUp() gin.HandlerFunc{
 		
 		password := HashPassword(*user.Password)
 		user.Password = &password
+
 		count, err := userCollection.CountDocuments(ctx, bson.M{"email":user.Email})
 		if err != nil{
 			log.Panic(err)
@@ -210,8 +211,12 @@ func GetUser() gin.HandlerFunc{
 		ctx, cancel := context.WithTimeout(context.Background(), 100 * time.Second)
 		defer cancel()
 		var user models.User
-		err := userCollection.FindOne(ctx, bson.M{"userId": userId}).Decode(&user)
+		err := userCollection.FindOne(ctx, bson.M{"user_id": userId}).Decode(&user)
 		if err != nil{
+			if err == mongo.ErrNoDocuments{
+				c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+				return 
+			}
 			c.JSON(http.StatusInternalServerError, gin.H{"error":  err.Error()})
 			return 
 		}

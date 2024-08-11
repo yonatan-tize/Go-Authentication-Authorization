@@ -23,6 +23,12 @@ type SignedDetails struct{
 	User_type 		string
 	jwt.StandardClaims
 }
+// type Claims struct {
+//     UserID   string `json:"user_id"`
+//     Username string `json:"username"`
+//     Role     string `json:"role"`
+//     jwt.StandardClaims
+// }
 
 var userCollection *mongo.Collection = database.OpenCollection(database.Client, "user")
 
@@ -106,13 +112,10 @@ func UpdateAllTokens(signedToken string, signedRefreshToken string, userId strin
 		Upsert: &upsert,
 	}
 
-	_, err := userCollection.UpdateOne(ctx, filter, bson.D{{"$set", updateObj},}, &opt)
+	_, err := userCollection.UpdateOne(ctx, filter, bson.D{{Key: "$set", Value: updateObj},}, &opt)
 
 	if err != nil{
 		log.Panic(err)
 		return
 	}
-	return
-	
-
 }
